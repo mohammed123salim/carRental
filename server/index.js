@@ -64,7 +64,6 @@ app.post("/registerUser", async (req, res) => {
     console.log("Incoming request body:", req.body);
     const { name, email, address, phone, age, password, role } = req.body;
 
-    // Check if user already exists (safe practice)
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       console.log("⚠️ User already exists:", email);
@@ -83,15 +82,22 @@ app.post("/registerUser", async (req, res) => {
       role: role || "customer",
     });
 
-    await user.save();
-    console.log("User saved:", user);
-    res.status(201).json({ user, msg: "User registered successfully." });
+    // 💡 Add this explicit logging of save result
+    try {
+      const savedUser = await user.save();
+      console.log("✅ User saved successfully:", savedUser);
+      res.status(201).json({ user: savedUser, msg: "User registered successfully." });
+    } catch (saveError) {
+      console.error("❌ Error during user.save():", saveError);
+      res.status(500).json({ error: "Failed to save user.", details: saveError.message });
+    }
 
   } catch (error) {
-    console.error("Error in registerUser:", error);
+    console.error("❌ Error in registerUser:", error);
     res.status(500).json({ error: error.message });
   }
 });
+
 
 
 //  Login — return user with role
