@@ -821,6 +821,35 @@ input, select {
   background-color: #5e00cc;
 }
 
+.containerStyle {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.boxStyle {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+  min-width: 190px;
+}
+
+.iconStyle {
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.inputStyle {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 1rem;
+  background: transparent;
+  cursor: pointer;
+}
 
 
 

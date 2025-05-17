@@ -11,6 +11,8 @@ import { CarSchemaValidation } from "../Validations/CarValidations";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 const UpdateCar = () => {
   const { id } = useParams(); // Get car ID from route
   const navigate = useNavigate();
@@ -29,7 +31,8 @@ const UpdateCar = () => {
 
   // Fetch car data to pre-fill form
   useEffect(() => {
-    axios.get(`http://localhost:3001/getCar/${id}`)
+    //axios.get(`http://localhost:3001/getCar/${id}`)
+    axios.get(`${SERVER_URL}/getCar/${id}`)
       .then((res) => {
         const car = res.data;
         reset(car); // Fill form with data
@@ -41,7 +44,8 @@ const UpdateCar = () => {
   }, [id, reset]);
 
   const onSubmit = (data) => {
-    axios.put(`http://localhost:3001/updateCar/${id}`, data)
+    //axios.put(`http://localhost:3001/updateCar/${id}`, data)
+    axios.put(`${SERVER_URL}/updateCar/${id}` , data)
       .then((res) => {
         alert("Car updated successfully!");
         navigate("/managecars");

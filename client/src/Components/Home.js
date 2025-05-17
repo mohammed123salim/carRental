@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MdLocationOn } from "react-icons/md";
 
+
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 const Home = () => {
   const email = useSelector((state) => state.users.user.email);
   const [cars, setCars] = useState([]);
@@ -24,7 +27,8 @@ const Home = () => {
   // Fetch cars from MongoDB
   useEffect(() => {
     axios
-      .get("http://localhost:3001/getCars")
+      //.get("http://localhost:3001/getCars")
+      .get(`${SERVER_URL}/getCars`)
       .then((res) => setCars(res.data))
       .catch((err) => console.error("Error fetching cars:", err));
   }, []);
@@ -48,7 +52,8 @@ const Home = () => {
   }
 
   axios
-    .get("http://localhost:3001/getAvailableCars", {
+    //.get("http://localhost:3001/getAvailableCars"
+    .get(`${SERVER_URL}/getAvailableCars`, {
       params: { pickup: pickupDate, return: returnDate },
     })
     .then((res) => setCars(res.data))
@@ -94,7 +99,8 @@ const Home = () => {
           <Col key={car._id} md="3" className="mb-4">
             <div className="car-card">
               <img
-                src={`http://localhost:3001${car.imageUrl}`}
+                //src={`http://localhost:3001${car.imageUrl}`}
+                src={`${SERVER_URL}${car.imageUrl}`}
                 alt={car.carName}
                 className="car-image"
                 style={{ width: "100%", height: "auto" }}
