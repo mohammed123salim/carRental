@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 const Booking = () => {
 
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/getAllBookings")
+      //.get("http://localhost:3001/getAllBookings")
+      .get(`${SERVER_URL}/getAllBookings`)
       .then((res) => setBookings(res.data))
       .catch((err) => console.error("Error fetching bookings:", err));
   }, []);
 
   const updateStatus = async (bookingId, newStatus) => {
     try {
-      await axios.put(`http://localhost:3001/updateBookingStatus/${bookingId}`, {
+      //await axios.put(`http://localhost:3001/updateBookingStatus/${bookingId}`, {
+      await axios.put(`${SERVER_URL}/updateBookingStatus/${bookingId}`, {
         status: newStatus,
       });
 
@@ -55,7 +59,8 @@ const Booking = () => {
                 <td>{booking.userEmail}</td>
                 <td className="car-info">
                   <img
-                    src={`http://localhost:3001${booking.imageUrl}`}
+                    //src={`http://localhost:3001${booking.imageUrl}`}
+                    src={`${SERVER_URL}${booking.imageUrl}`}
                     alt={booking.carName}
                     className="car-img"
                   />

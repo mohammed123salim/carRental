@@ -4,6 +4,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import useLocation from "./Location"; // Import the custom hook
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 const Profile = () => {
   const email = useSelector((state) => state.users.user.email);
   const navigate = useNavigate();
@@ -17,7 +19,8 @@ const Profile = () => {
       navigate("/login");
     } else {
       axios
-        .get(`http://localhost:3001/getBookings/${email}`)
+        //.get(`http://localhost:3001/getBookings/${email}`)
+        .get(`${SERVER_URL}/getBookings/${email}`)
         .then((res) => setBookings(res.data))
         .catch((err) => console.error("Error fetching bookings:", err));
     }
@@ -47,7 +50,8 @@ const Profile = () => {
               <tr key={booking._id}>
                 <td className="car-info">
                   <img
-                    src={`http://localhost:3001${booking.imageUrl}`}
+                    //src={`http://localhost:3001${booking.imageUrl}`}
+                    src={`${SERVER_URL}${booking.imageUrl}`}
                     alt={booking.carName}
                     className="car-img"
                   />

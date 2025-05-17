@@ -6,6 +6,7 @@ import { Button, Col, Row } from "reactstrap";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const CarInfos = () => {
   const { id } = useParams();
@@ -19,7 +20,8 @@ const CarInfos = () => {
   const email = useSelector((state) => state.users.user.email);
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/getCar/${id}`).then((res) => {
+    //axios.get(`http://localhost:3001/getCar/${id}`)
+    axios.get(`${SERVER_URL}/getCar/${id}`).then((res) => {
       setCar(res.data);
     });
   }, [id]);
@@ -53,7 +55,9 @@ const CarInfos = () => {
   };
 
      try {
-    await axios.post("http://localhost:3001/bookCar", bookingData);
+    //await axios.post("http://localhost:3001/bookCar", bookingData);
+    await axios.post(`${SERVER_URL}/bookCar`, bookingData);
+    
     alert("Car booked successfully!");
      navigate("/profile");
   } catch (err) {
@@ -69,7 +73,8 @@ const CarInfos = () => {
   return (
     <div className="car-info-container">
       <img
-        src={`http://localhost:3001${car.imageUrl}`}
+        //src={`http://localhost:3001${car.imageUrl}`}
+        src={`${SERVER_URL}${car.imageUrl}`}
         alt={car.carName}
         className="car-info-image"
       />
