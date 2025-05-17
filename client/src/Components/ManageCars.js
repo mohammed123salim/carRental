@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 
 const ManageCars = () => {
   const navigate = useNavigate();
@@ -10,7 +12,8 @@ const ManageCars = () => {
 
   const fetchCars = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/getCars');
+      //const res = await axios.get('http://localhost:3001/getCars');
+      const res = await axios.get(`${SERVER_URL}/getCars`);
       setCars(res.data);
     } catch (err) {
       console.error("Error fetching cars:", err);
@@ -24,7 +27,8 @@ const ManageCars = () => {
   const deleteCar = async (id) => {
     if (window.confirm("Are you sure you want to delete this car?")) {
       try {
-        await axios.delete(`http://localhost:3001/deleteCar/${id}`);
+        //await axios.delete(`http://localhost:3001/deleteCar/${id}`);
+        await axios.delete(`${SERVER_URL}/deleteCar/${id}`);
         fetchCars(); // Refresh
       } catch (err) {
         console.error("Delete failed:", err);
@@ -51,7 +55,8 @@ const ManageCars = () => {
           <div key={car._id} className="car-card">
 
         <img
-        src={`http://localhost:3001${car.imageUrl}`}
+        //src={`http://localhost:3001${car.imageUrl}`}
+        src={`${SERVER_URL}${car.imageUrl}`}
         alt={car.carName}
         className="car-image"
         />
