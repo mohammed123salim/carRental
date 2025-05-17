@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Correct usage of your environment variable
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 

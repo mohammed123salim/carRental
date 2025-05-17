@@ -2,6 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import * as ENV from "../config";
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
+
 // Initial state
 const initialState = {
   car: {},
@@ -13,7 +16,7 @@ const initialState = {
 // Async action for registering a new car
 export const registerCar = createAsyncThunk("cars/addCar", async (carData) => {
   try {
-    const response = await axios.post(`${ENV.SERVER_URL}/addCar`, carData, {
+    const response = await axios.post(`${SERVER_URL}/addCar`, carData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
