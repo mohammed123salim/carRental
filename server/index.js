@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-
-
 import bcrypt from "bcrypt";
 import cors from "cors";
 import express from "express";
@@ -8,10 +6,21 @@ import multer from 'multer';
 import UserModel from "./Models/UserModel.js";
 import CarModel from "./Models/CarModel.js";
 import BookingModel from "./Models/BookModel.js";
+import * as ENV from "./config.js";
 
 const app = express();
+
+// CORS middleware
+const corsOptions = {
+  origin: ENV.CLIENT_URL,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
 app.use(express.json());
-app.use(cors());
+
+
 app.use('/uploads', express.static('uploads'));
 
 //  Setup Multer for image upload
@@ -27,7 +36,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 //  MongoDB Connection
-const connectString = "mongodb+srv://admin:admin@carrentalcluster.earyxfz.mongodb.net/CarRentalDB";
+//const /connectString = "mongodb+srv://admin:admin@carrentalcluster.earyxfz.mongodb.net/CarRentalDB";
+const connectString = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}/${process.env.DB_NAME}`;
+
 mongoose.connect(connectString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -288,6 +299,9 @@ app.get("/getAvailableCars", async (req, res) => {
 
 
 
-app.listen(3001, () => {
-  console.log("You are connected");
+const port = ENV.PORT || 3001;
+app.listen(port, () => {
+console.log(`You are connected at port: ${port}`);
+
+
 });

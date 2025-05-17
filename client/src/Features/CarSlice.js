@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import * as ENV from "../config";
 
 // Initial state
 const initialState = {
@@ -9,18 +10,14 @@ const initialState = {
   isError: false,
 };
 
-
-
 // Async action for registering a new car
 export const registerCar = createAsyncThunk("cars/addCar", async (carData) => {
   try {
-    const response = await axios.post("http://localhost:3001/addCar", carData, {
+    const response = await axios.post(`${ENV.SERVER_URL}/addCar`, carData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-
-
 
     console.log("Car Registration Response:", response);
     return response.data.car;
@@ -54,10 +51,8 @@ export const carSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
       });
-      
   },
 });
 
 export const { addCar } = carSlice.actions;
-
 export default carSlice.reducer;
