@@ -7,6 +7,15 @@ import UserModel from "./Models/UserModel.js";
 import CarModel from "./Models/CarModel.js";
 import BookingModel from "./Models/BookModel.js";
 import * as ENV from "./config.js";
+import dotenv from 'dotenv';
+dotenv.config();
+
+export const DB_USER = process.env.DB_USER;
+export const DB_PASSWORD = process.env.DB_PASSWORD;
+export const DB_CLUSTER = process.env.DB_CLUSTER;
+export const DB_NAME = process.env.DB_NAME;
+export const PORT = process.env.PORT;
+
 
 const app = express();
 
@@ -40,6 +49,7 @@ const upload = multer({ storage });
 const connectString = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}/${process.env.DB_NAME}`;
 
 
+
 mongoose.connect(connectString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -51,7 +61,16 @@ mongoose.connect(connectString, {
 //  Register User 
 app.post("/registerUser", async (req, res) => {
   try {
+    console.log("Incoming request body:", req.body);
     const { name, email, address, phone, age, password, role } = req.body;
+
+    // Check if user already exists (safe practice)
+    const existingUser = await UserModel.findOne({ email });
+    if (existingUser) {
+      console.log("⚠️ User already exists:", email);
+      return res.status(400).json({ error: "User already exists." });
+    }
+
     const hashedpassword = await bcrypt.hash(password, 10);
 
     const user = new UserModel({
@@ -61,15 +80,19 @@ app.post("/registerUser", async (req, res) => {
       phone,
       age,
       password: hashedpassword,
-      role: role || "customer", // default to customer
+      role: role || "customer",
     });
 
     await user.save();
-    res.send({ user, msg: "Added." });
+    console.log("User saved:", user);
+    res.status(201).json({ user, msg: "User registered successfully." });
+
   } catch (error) {
-    res.status(500).json({ error: "An error occurred" });
+    console.error("Error in registerUser:", error);
+    res.status(500).json({ error: error.message });
   }
 });
+
 
 //  Login — return user with role
 app.post("/login", async (req, res) => {
@@ -309,6 +332,18 @@ app.get("/test", async (req, res) => {
     res.status(500).send("❌ DB connection failed.");
   }
 });
+
+app.get("/test-users", async (req, res) => {
+  try {
+    const users = await UserModel.find();
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 
 
 

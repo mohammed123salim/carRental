@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import * as ENV from "../config";
+
+// Correct usage of your environment variable
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 
 const initialState = {
   user: {},
@@ -15,61 +18,47 @@ export const registerUser = createAsyncThunk(
   "users/registerUser",
   async (userData) => {
     try {
-      const response = await axios.post(`${ENV.SERVER_URL}/registerUser`, {
-        name: userData.name,
-        email: userData.email,
-        address: userData.address,
-        phone: userData.phone,
-        age: userData.age,
-        password: userData.password,
-      });
-      console.log(response);
+      console.log("Register API URL:", SERVER_URL); // For debugging
+      const response = await axios.post(`${SERVER_URL}/registerUser`, userData);
       return response.data.user;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   }
 );
 
-// Login
+// Login User
 export const login = createAsyncThunk("users/login", async (userData) => {
   try {
-    const response = await axios.post(`${ENV.SERVER_URL}/login`, {
-      email: userData.email,
-      password: userData.password,
-    });
-
-    const user = response.data.user;
-    console.log(response);
-    return user;
+    const response = await axios.post(`${SERVER_URL}/login`, userData);
+    return response.data.user;
   } catch (error) {
-    const errorMessage = "Invalid credentials";
-    alert(errorMessage);
-    throw new Error(errorMessage);
+    console.error(error);
+    throw new Error("Invalid credentials");
   }
 });
 
-// Logout
+// The same for other APIs:
 export const logout = createAsyncThunk("/users/logout", async () => {
   try {
-    await axios.post(`${ENV.SERVER_URL}/logout`);
-  } catch (error) {}
+    await axios.post(`${SERVER_URL}/logout`);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
-// Fetch Users
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const response = await axios.get(`${ENV.SERVER_URL}/getUsers`);
+  const response = await axios.get(`${SERVER_URL}/getUsers`);
   return response.data;
 });
 
-// Delete User
 export const deleteUser = createAsyncThunk("users/deleteUser", async (id) => {
-  await axios.delete(`${ENV.SERVER_URL}/deleteUser/${id}`);
+  await axios.delete(`${SERVER_URL}/deleteUser/${id}`);
   return id;
 });
 
-// Slice
+// Redux slice remains the same
 export const userSlice = createSlice({
   name: "users",
   initialState,
@@ -103,9 +92,11 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
       })
+
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.value = state.value.filter((user) => user._id !== action.payload);
       })
+
       .addCase(login.pending, (state) => {
         state.isLoading = true;
       })
@@ -118,6 +109,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
       })
+
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
       })
