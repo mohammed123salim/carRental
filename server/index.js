@@ -39,10 +39,14 @@ const upload = multer({ storage });
 //const /connectString = "mongodb+srv://admin:admin@carrentalcluster.earyxfz.mongodb.net/CarRentalDB";
 const connectString = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}/${process.env.DB_NAME}`;
 
+
 mongoose.connect(connectString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+})
+.then(() => console.log('✅ Connected to MongoDB Atlas'))
+.catch((err) => console.error('❌ Failed to connect to MongoDB:', err));
+
 
 //  Register User 
 app.post("/registerUser", async (req, res) => {
@@ -293,6 +297,16 @@ app.get("/getAvailableCars", async (req, res) => {
   } catch (error) {
     console.error("Error fetching available cars:", error);
     res.status(500).send("Failed to fetch available cars");
+  }
+});
+
+app.get("/test", async (req, res) => {
+  try {
+    const userCount = await UserModel.countDocuments();
+    res.send(`✅ DB Connected. Total Users: ${userCount}`);
+  } catch (error) {
+    console.error("Test route error:", error);
+    res.status(500).send("❌ DB connection failed.");
   }
 });
 
