@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules/
+*.pack
+*.lock
 .cache/
 /.pnp
 .pnp.js

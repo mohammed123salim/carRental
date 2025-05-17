@@ -21,6 +21,20 @@ it("should show developer Mohammed Al-Balushi", () => {
 
 // tset case 3
 
+it("should display 'Front-end Developer' role", () => {
+  render(<About />);
+  const role = screen.getByText(/Front-end Developer/i);
+  expect(role).toBeInTheDocument();
+});
+
+// Test Case 4
+it("should display at least 3 team member cards", () => {
+  render(<About />);
+  const teamCards = screen.getAllByRole("heading", { level: 5 });
+  expect(teamCards.length).toBeGreaterThanOrEqual(3);
+});
+
+
 
 
 
