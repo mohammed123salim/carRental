@@ -21,10 +21,12 @@ const app = express();
 
 // CORS middleware
 const corsOptions = {
-  origin: ENV.CLIENT_URL,
+  origin: ["https://carrental-slf0.onrender.com"], 
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
+app.use(cors(corsOptions));
+
 app.use(cors(corsOptions));
 
 app.use(express.json());
